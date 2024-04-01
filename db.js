@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 require('dotenv').config()
-const mongo_local_Url = process.env.MONDO_DB_LOCAL_URL;
+const mongo_local_Url = process.env.MONGO_DB_LOCAL_URL;
 const mongoUrl = process.env.MONGODB_ONLINE_URL;
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true, // This will create a new URL parser instance instead of the default one.

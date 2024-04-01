@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.get("/", (req, res) => {
   // Sending a string response directly
-  res.send({ statusCode: 2000, success: true, message: "This is home page." });
+  res.send({ statusCode: 200, success: true, message: "This is home page." });
 });
 const router = require("./routes/userRoute");
 app.use('/api/v1', router);

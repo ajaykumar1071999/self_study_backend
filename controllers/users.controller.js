@@ -1,4 +1,6 @@
 const Person = require("../models/users.model");
+const { successResponse, errorResponse } = require("../utils/response");
+const { responseMessage } = require("../utils/responseMessage");
 
 exports.createUser = async (req, res) => {
   try {
@@ -6,23 +8,21 @@ exports.createUser = async (req, res) => {
 
     const isUserExist = await Person.findOne({ email: data.email });
     if (isUserExist) {
-      return res.status(400).json({ message: "user already exist" });
+      console.log('userExist',isUserExist)
+      return errorResponse(res, 400, responseMessage.user_already_exist, responseMessage.user_already_exist)
     }
 
     const user = new Person(data);
 
     const savedUser = await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "user created successfully.",
-      savedUser,
-    });
+
+    if (savedUser) {
+      return successResponse(res, 200, responseMessage.user_created, savedUser);
+    }
   } catch (err) {
-    console.log(err);
-    res
-      .status(500)
-      .json({ success: false, message: "Internal server error", err });
+    console.log('err',err)
+    return errorResponse(res, 500, responseMessage.internal_server_err, err);
   }
 };
 
@@ -49,8 +49,8 @@ exports.updateSingleUser = async (req, res) => {
     } else {
       res.status(404).json({ success: false, message: "No userfound.", })
 
-     }
-    console.log('updatedUser',updatedUser)
+    }
+    console.log('updatedUser', updatedUser)
     // const findUser = await Person.findOne({ _id: id });
     // console.log('find user',findUser)
     // if (findUser) {
@@ -75,17 +75,17 @@ exports.updateSingleUser = async (req, res) => {
   }
 };
 
-exports.deleteSingleUser = async(req, res) => { 
+exports.deleteSingleUser = async (req, res) => {
   try {
     const userId = req.params.userId;
     const deletedUser = await Person.findByIdAndDelete(userId);
     if (deletedUser) {
       res.status(200).json({ success: true, message: "User deleted successfully.", deletedUser });
     } else {
-      res.status(404).json({ success: false, message: "User not found.",deletedUser });
+      res.status(404).json({ success: false, message: "User not found.", deletedUser });
 
-     }
-  } catch (err) { 
+    }
+  } catch (err) {
     console.log(err);
-   }
+  }
 };
